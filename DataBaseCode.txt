@@ -1,0 +1,675 @@
+
+
+drop table Facturi
+/
+drop table Clienti
+/
+drop table Abonamente
+/
+drop table Vanzari
+/
+drop table Produse
+/
+drop table Clase
+/
+drop table Sali
+/
+drop table Antrenori
+/
+drop table Angajati
+/
+
+create table Angajati(
+IdAngajat varchar(10) constraint pk_id_angajat primary key,
+NumeAng varchar (20) not null,
+PrenumeAng varchar (20) not null,
+NrTelefonAng varchar (20),
+DataAngajare Date,
+NivelStudii varchar (10),
+EmailAng varchar (70),
+PostOcupat varchar (70)
+)
+/
+ create table Antrenori(
+IdAntrenor varchar (10) constraint pk_id_antrenor primary key,
+status varchar(20),
+IdAngajat varchar(10) not null constraint fk_idAngajat_an references Angajati(IdAngajat) on delete cascade,
+Specializare varchar (20) not null)
+
+/
+
+create table Sali(
+IdSala varchar(10) constraint pk_id_sala primary key,
+DenumireSala varchar(30) constraint restrictie_nenul_denumireSala not null,
+NrMaxClienti number constraint restrictie_nenul_nrMaxCl not null)
+/
+ 
+create table Clase(
+IdClasa varchar (10) constraint pk_id_clasa primary key,
+DataClasa Date,
+OraInceput timestamp,
+IdSala varchar(10) not null constraint fk_idSala_s references Sali(IdSala) on delete cascade,
+IdAntrenor varchar(10) not null constraint fk_idAntrenor_antre references Antrenori(IdAntrenor) on delete cascade
+)
+/
+create table Produse(
+IdProdus varchar(10) constraint pk_id_produs primary key, 
+DenumireProdus varchar(30) constraint restrictie_nenul_denumireProdus not null,
+Grupa varchar(15),
+UnitatiMonetare varchar(3),
+PretUnitar number constraint restrictie_nenul_pretUnitar not null,
+TaxaPeValoareAdaugata numeric(2)
+)
+/
+
+
+create table Vanzari(
+IdVanzare varchar(10) constraint pk_id_vanzare primary key,
+IdProdus varchar(10)  not null constraint fk_idProdus_pr references Produse(IdProdus) on delete cascade,
+DataVanzarii date,
+Cantitate number
+)
+/
+
+
+
+create table Abonamente(
+IdAbonament varchar(10) constraint pk_idAbonament primary key,
+IdProdus  varchar(10) not null constraint fk_IdProdus_P references Produse(IdProdus)  on delete cascade,
+DataInceput Date,
+DataSfarsit Date
+--PretAb number not null
+)
+/
+create table Clienti(
+IdClient varchar(10) constraint pk_idClient primary key,
+NumeCl varchar(45) not null,
+PrenumeCl varchar(55) not null,
+AdresaCl varchar(50) not null,
+NrTelefonCl varchar(20)  not null,
+EmailCl varchar(50) not null,
+DataNCl Date,
+IdAbonament varchar(10) not null constraint fk_idAbonament_ab references Abonamente(IdAbonament)  on delete cascade,
+IdAntrenor varchar(10) not null constraint fk_idAntrenor_an references Antrenori(IdAntrenor)  on delete cascade
+)
+/
+
+create table Facturi(
+ IdFactura varchar(10) not null primary key,
+ IdVanzare varchar(10)  not null constraint fk_idVanzare_vn references Vanzari(IdVanzare) on delete cascade,
+  DataFactura Date,
+  SerieFactura number(10),
+  Observatii varchar (80),
+  IdClient varchar (10) constraint fk_idClient_cl references Clienti(IdClient) on delete cascade
+ -- IdBonFiscal numeric(4) constraint fk_idBonFiscal references Bonuri_Fiscale(idBonFiscal) on update cascade on delete cascade
+ )
+ /
+ 
+ 
+ insert into Angajati  values ('30', 'Popescu', 'Maria', '0762594836', TO_DATE('30/12/2018', 'DD/MM/YYYY'), 'Superioare', 'popescumaria@yahoo.com', 'CEO' ); 
+insert into Angajati  values ('31', 'Rusu', 'Elena', '0754694235', TO_DATE('01/01/2019', 'DD/MM/YYYY'), 'Superioare', 'elena.rusu@gmail.com', 'Manager financiar-contabil' );
+insert into Angajati  values ('32', 'Costea', 'Miruna', '0749756210', TO_DATE('01/01/2019', 'DD/MM/YYYY'), 'Superioare', 'mirunacostea@yahoo.com', 'Manager PR' );
+insert into Angajati  values ('33', 'Costache', 'Narcisa', '0723559874', TO_DATE('01/01/2019', 'DD/MM/YYYY'), 'Superioare', 'costache_narcisa@gmail.com', 'Manager HR' );
+insert into Angajati  values ('34', 'Apostol', 'Mihai', '0757769501', TO_DATE('03/01/2019', 'DD/MM/YYYY'), 'Superioare', 'mihaiapostol@gmail.com', 'Expert contabil' );
+insert into Angajati values ('35', 'Maxim', 'Mihaela','0765584037', TO_DATE('05/01/2019', 'DD/MM/YYYY'), 'Superioare', 'maxim_mihaela@yahoo.com', 'Receptionera' );
+insert into Angajati  values ('36', 'Rusu', 'Sabina', '0762238115', TO_DATE('12/02/2019', 'DD/MM/YYYY'), 'Superioare', 'rusu_sabina@gmail.com', 'Instructor pillates' );
+insert into Angajati values ('37', 'Costache', 'Georgiana', '0762166970', TO_DATE('12/01/2019', 'DD/MM/YYYY'), 'Superioare', 'georgiana.c@yahoo.com', 'Instructor yoga' );
+insert into Angajati  values ('38', 'Costea', 'Elena', '0754022387', TO_DATE('12/01/2019', 'DD/MM/YYYY'), 'Superioare', 'elena_costea@gmail.com', 'Instructor zumba' );
+insert into Angajati values ('39', 'Mircea', 'Iulian', '0742598741', TO_DATE('12/02/2019', 'DD/MM/YYYY'), 'Superioare', 'mircea.iulian@gmail.com', 'Instructor zumba' );
+insert into Angajati  values ('40', 'Filip', 'Ana', '0754700006', TO_DATE('15/02/2019', 'DD/MM/YYYY'), 'Superioare', 'ana.filip@yahoo.com', 'Instructor fitball' );
+insert into Angajati values ('41', 'Ursu', 'Adrian', '0764470319', TO_DATE('16/02/2019', 'DD/MM/YYYY'), 'Superioare', 'ursuadrian0@gmail.com', 'Instructor cardio' );
+insert into Angajati  values ('42', 'Oancea', 'Iuliana', '0754036980', TO_DATE('17/02/2019', 'DD/MM/YYYY'), 'Superioare', 'oancea.iuli@yahoo.com', 'Instructor cycling' );
+insert into Angajati  values ('43', 'Mironescu', 'Magda', '0784409760', TO_DATE('17/02/2019', 'DD/MM/YYYY'), 'Superioare', 'mironescu_magda@gmail.com', 'Instructor metabolic workout' );
+insert into Angajati values ('44', 'Beldiman', 'Vlad', '0723408897', TO_DATE('17/02/2019', 'DD/MM/YYYY'), 'Superioare', 'vladb0@gmail.com', 'Instructor aerobic' );
+insert into Angajati  values ('45', 'Craciun', 'Simona', '0736488045', TO_DATE('17/02/2019', 'DD/MM/YYYY'), 'Superioare', 'simonacraciun@gmail.com', 'Instructor intense abs' );
+insert into Angajati values ('46', 'Surugiu', 'Alin', '0788934056', TO_DATE('24/02/2019', 'DD/MM/YYYY'), 'Superioare', 'surugiu0@yahoo.com', 'Instructor abs&arms)' );
+insert into Angajati  values ('47', 'Miron', 'Oana', '0757031156', TO_DATE('24/02/2019', 'DD/MM/YYYY'), 'Superioare', 'oana.miron@gmail.com', 'Instructor cardio' );
+insert into Angajati  values ('48', 'Condrea', 'Andreea', '0784540007', TO_DATE('24/02/2019', 'DD/MM/YYYY'), 'Superioare', 'c.andreea@gmail.com', 'Instructor cardio' );
+insert into Angajati  values ('49', 'Moisuc', 'Ioana', '0726487564', TO_DATE('25/03/2019', 'DD/MM/YYYY'), 'Superioare', 'ioana.mois@yahoo.com', 'Instructor zumba' );
+insert into Angajati values ('50', 'Rusu', 'Alex', '0754856217', TO_DATE('27/03/2019', 'DD/MM/YYYY'), 'Superioare', 'alex.rusu@gmail.com', 'Instructor aerobic' );
+insert into Angajati  values ('51', 'Frij', 'Cristina', '0764452130', TO_DATE('27/03/2019', 'DD/MM/YYYY'), 'Superioare', 'cristina.frij@gmail.com', 'Instructor abs&arms' );
+insert into Angajati  values ('52', 'Dorneanu', 'Stefania', '0723655965', TO_DATE('04/05/2019', 'DD/MM/YYYY'), 'Superioare', 'd_stefania@yahoo.com', 'Instructor yoga' );
+insert into Angajati  values ('53', 'Stoica', 'Mihai', '0724485641', TO_DATE('13/05/2019', 'DD/MM/YYYY'), 'Superioare', 'mihai.stoica@yahoo.com', 'Instructor pilates' );
+insert into Angajati  values ('54', 'Ninu', 'Ionut', '0754987566', TO_DATE('13/05/2019', 'DD/MM/YYYY'), 'Superioare', 'ninu$ionut@gmail.com', 'Instructor kangoo-jumps' );
+insert into Angajati  values ('55', 'Popescu', 'Marius', '0721789445', TO_DATE('01/09/2019', 'DD/MM/YYYY'), 'Superioare', 'marius_pop@gmail.com', 'Instructor fitball' );
+insert into Angajati values ('56', 'Carja', 'Ovidiu', '0764789654', TO_DATE('01/09/2019', 'DD/MM/YYYY'), 'Superioare', 'carja.ovidiu@gmail.com', 'Instructor metabolic workout' );
+insert into Angajati values ('57', 'Roman', 'Andreea', '0723556332', TO_DATE('01/01/2019', 'DD/MM/YYYY'), 'Superioare', 'romanandreea@gmail.com', 'Femeie de serviciu' );
+insert into Angajati values ('58', 'Stoica', 'Adrian', '0752169782', TO_DATE('01/01/2019', 'DD/MM/YYYY'), 'Superioare', 'stoicaadrian@gmail.com', 'Sef sala fitness' );
+insert into Angajati  values ('59', 'Margine', 'Ioana', '0756442656', TO_DATE('01/01/2019', 'DD/MM/YYYY'), 'Superioare', 'marg_ioana@yahoo.com', 'Sef sala fitness' );
+insert into Angajati  values ('60', 'Oncea', 'Ioan', '0764542310', TO_DATE('01/01/2019', 'DD/MM/YYYY'), 'Superioare', 'ioan.oancea@gmail.com', 'Sef sala fitness' );
+
+
+-------------Produse-------------
+
+
+insert into Produse values ('2', 'Shaker', 'Accesorii', 'RON', 15, 19);
+insert into Produse  values ('1', 'Manusi de fitness', 'Accesorii', 'RON', 59, 19); 
+Insert into Produse  values ('3', 'Colanti Black Gym', 'Imbracaminte', 'RON', 30, 19);
+insert into Produse  values ('4', 'Colanti Blue Gym', 'Imbracaminte', 'RON', 30, 19);
+insert into Produse  values ('5', 'Colanti Pink Gym', 'Imbracaminte', 'RON', 30, 19);
+insert into Produse  values ('6', 'Colanti Ultrafit', 'Imbracaminte', 'RON', 55, 19);
+insert into Produse values ('7', 'Colanti Healthy', 'Imbracaminte', 'RON', 50, 19);
+insert into Produse  values ('8', 'Tricou Basic Black', 'Imbracaminte', 'RON', 47, 19);
+insert into Produse  values ('9', 'Sapca Gym Black', 'Imbracaminte', 'RON', 15, 19);
+insert into Produse  values ('10', 'Sapca Gym Grey', 'Imbracaminte', 'RON', 15, 19);
+insert into Produse values ('11', 'Sosete White Gym', 'Imbracaminte', 'RON', 9, 19);
+insert into Produse values ('12', 'Pantaloni scurti Slimfit','Imbracaminte', 'RON', 95, 19);
+insert into Produse  values ('13', 'Pantaloni scurti fitness', 'Imbracaminte', 'RON', 60, 19);
+insert into Produse  values ('14', 'Top Sport Ultrafit', 'Imbracaminte', 'RON', 76, 19);
+insert into Produse values ('15', 'Proteine Just Whey', 'Nutritie', 'RON', 100, 19);
+insert into Produse  values ('16', 'Multivitamine Lipozomale', 'Nutritie', 'RON', 120, 19);
+insert into Produse values ('17', 'ProteineFueSix', 'Nutritie', 'RON', 10, 19);
+insert into Produse  values ('18', 'Stimultent de Pre-Antrenament', 'Nutritie', 'RON', 76, 19);
+insert into Produse  values ('19', 'BIO Vitamina D3', 'Nutritie', 'RON', 50, 19);
+insert into Produse  values ('20', 'Arzator de grasime', 'Nutritie', 'RON', 89, 19);
+insert into Produse  values ('21', 'Colagen hidrolizat', 'Nutritie', 'RON', 75, 19);
+insert into Produse  values ('22', 'Supliment pentru articulatii', 'Nutritie', 'RON', 25, 19);
+insert into Produse values ('23', 'Multivitamine Vitality', 'Nutritie', 'RON', 19, 19);
+insert into Produse  values ('24', 'L-Glutamina', 'Nutritie', 'RON', 98, 19);
+insert into Produse   values ('25', 'ProAMINO', 'Nutritie', 'RON', 86, 19);
+insert into Produse values ('26', 'Creatina', 'Nutritie', 'RON', 65, 19);
+insert into Produse values ('27', 'Omega 3', 'Nutritie', 'RON', 34, 19);
+insert into Produse  values ('28', '100% Casein', 'Nutritie', 'RON', 87, 19);
+insert into Produse  values ('30', 'Abonament Basic', 'Fitness', 'RON', 250, 19);
+
+-------------------Sali-----------------------------
+
+
+insert into Sali values('10','Sala zumba',20);
+insert into Sali values('11','Sala fitness',25);
+insert into Sali values('12','Sala karate',40);
+insert into Sali values('13','Sala MMA',30);
+insert into Sali values('14','Sala yoga',25);
+insert into Sali values('15','Sala fitness1',20);
+insert into Sali values('16','Sala fitness2',22);
+insert into Sali values('17','Sala fitness3',28);
+insert into Sali values('18','Sala fitness4',35);
+insert into Sali values('19','Sala fitness5',45);
+
+---------------Antrenori-------------------
+
+
+
+insert into Antrenori values ('20','Andrei','30', 'Zumba');
+insert into Antrenori values ('21', 'Mihai','31','Kangoo-Jumps');
+insert into Antrenori values ('22','Bogdan','32', 'Metabolic Workout');
+insert into Antrenori values ('23','George', '33','Aerobic');
+insert into Antrenori  values ('24','Will', '34','Intense Abs');
+insert into Antrenori  values ('25', 'Adi','45','Pilates');
+insert into Antrenori  values ('26','Cosmin', '46','Abs&Arms');
+insert into Antrenori values ('27','Alexandru','43', 'Cardio');
+insert into Antrenori  values ('28', 'Sebastian','36','Yoga');
+insert into Antrenori  values ('29', 'Alex','37','Fitball');
+insert into Antrenori values ('30','Sandu', '38','Cycling');
+insert into Antrenori  values ('31','Ovidiu','39', 'Cardio');
+insert into Antrenori  values ('32','Constantin', '55','Zumba');
+insert into Antrenori values ('33','Dimitri', '54','Zumba');
+insert into Antrenori  values ('34','Ionel','53', 'Aerobic');
+insert into Antrenori  values ('35','Robert', '52','Abs&Arms');
+insert into Antrenori  values ('36','Emilian', '51','Yoga');
+insert into Antrenori  values ('37','Ionatan', '50','Pilates');
+insert into Antrenori  values ('38','Razvan', '57','Kangoo-Jumps');
+insert into Antrenori  values ('39','Raul', '58','Fitball');
+insert into Antrenori  values ('40','Cristi', '59','Metabolic Workout');
+
+-----------Clase----------------
+
+
+insert into Clase  values (10, TO_DATE('30/01/2019' ,'DD/MM/YYYY'), TO_TIMESTAMP('30/01/2019 12:00:02', 'DD/MM/YYYY HH24:MI:SS'), '10', '20');
+insert into Clase values (11, TO_DATE('14/03/2019', 'DD/MM/YYYY'),TO_TIMESTAMP('2019/03/14 13:15:01', 'YYYY/MM/DD HH24:MI:SS'), '11' , '27');
+insert into Clase values (12, TO_DATE('14/03/2019', 'DD/MM/YYYY'),TO_TIMESTAMP('2019/03/14 10:30:02', 'YYYY/MM/DD HH24:MI:SS'), '12', '22');
+insert into Clase values (13, TO_DATE('18/03/2019', 'DD/MM/YYYY'),TO_TIMESTAMP('2019/03/18 16:15:05', 'YYYY/MM/DD HH24:MI:SS'), '13', '29');
+insert into Clase  values (14, TO_DATE('27/03/2019', 'DD/MM/YYYY'), TO_TIMESTAMP('2019/03/27 13:20:02', 'YYYY/MM/DD HH24:MI:SS'), '14', '24');
+insert into Clase  values (15, TO_DATE('30/03/2019', 'DD/MM/YYYY'), TO_TIMESTAMP('2019/03/30 09:00:12', 'YYYY/MM/DD HH24:MI:SS'), '15', '28');
+insert into Clase  values (16, TO_DATE('02/04/2019', 'DD/MM/YYYY'), TO_TIMESTAMP('2019/04/02 13:15:02', 'YYYY/MM/DD HH24:MI:SS'), '12', '26');
+insert into Clase  values (17, TO_DATE('02/04/2019', 'DD/MM/YYYY'), TO_TIMESTAMP('2019/04/02 13:15:05', 'YYYY/MM/DD HH24:MI:SS'), '16', '21');
+insert into Clase  values (18, TO_DATE('10/04/2019', 'DD/MM/YYYY'), TO_TIMESTAMP('2019/04/10 15:30:02', 'YYYY/MM/DD HH24:MI:SS'), '17', '25');
+insert into Clase  values (19, TO_DATE('10/09/2019', 'DD/MM/YYYY'), TO_TIMESTAMP('2019/09/10 15:30:02', 'YYYY/MM/DD HH24:MI:SS'), '18', '23');
+insert into Clase  values (20, TO_DATE('29/11/2019', 'DD/MM/YYYY'), TO_TIMESTAMP('2019/11/29 18:20:02', 'YYYY/MM/DD HH24:MI:SS'), '19', '30');
+
+
+-------------Abonamente------------------------
+
+ 
+insert into Abonamente values
+(10,30, TO_DATE('12/05/2019','DD/MM/YYYY'), TO_DATE('10/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(11,30, TO_DATE('12/05/2019','DD/MM/YYYY'), TO_DATE('10/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(12,30,TO_DATE('11/05/2019','DD/MM/YYYY'), TO_DATE('10/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(13,30,TO_DATE('12/05/2019','DD/MM/YYYY'), TO_DATE('20/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(14,30,TO_DATE('12/05/2019','DD/MM/YYYY'), TO_DATE('10/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(15,30,TO_DATE('12/07/2019','DD/MM/YYYY'), TO_DATE('13/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(16,30,TO_DATE('22/08/2015','DD/MM/YYYY'), TO_DATE('14/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(17,30,TO_DATE('18/03/2018','DD/MM/YYYY'), TO_DATE('14/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(18,30,TO_DATE('10/07/2018','DD/MM/YYYY'), TO_DATE('12/09/2020','DD/MM/YYYY'));
+insert into Abonamente values
+(19,30,TO_DATE('08/05/2019','DD/MM/YYYY'), TO_DATE('13/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(20,30,TO_DATE('12/05/2019','DD/MM/YYYY'), TO_DATE('10/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(21,30,TO_DATE('07/12/2019','DD/MM/YYYY'), TO_DATE('17/02/2010','DD/MM/YYYY'));
+insert into Abonamente values
+(22,30,TO_DATE('10/11/2017','DD/MM/YYYY'), TO_DATE('12/04/2020','DD/MM/YYYY'));
+insert into Abonamente values
+(23,30,TO_DATE('22/05/2019','DD/MM/YYYY'), TO_DATE('10/09/2010','DD/MM/YYYY'));
+insert into Abonamente values
+(24,30,TO_DATE('15/08/2010','DD/MM/YYYY'), TO_DATE('10/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(25,30,TO_DATE('10/11/2010','DD/MM/YYYY'), TO_DATE('10/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(26,30,TO_DATE('12/05/2019','DD/MM/YYYY'), TO_DATE('10/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(27,30,TO_DATE('13/07/2016','DD/MM/YYYY'), TO_DATE('13/09/2020','DD/MM/YYYY'));
+insert into Abonamente values
+(28,30,TO_DATE('22/05/2020','DD/MM/YYYY'), TO_DATE('12/09/2020','DD/MM/YYYY'));
+insert into Abonamente values
+(29,30,TO_DATE('23/08/2019','DD/MM/YYYY'), TO_DATE('20/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(30,30,TO_DATE('12/05/2019','DD/MM/YYYY'), TO_DATE('10/09/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(31,30,TO_DATE('20/05/2019','DD/MM/YYYY'), TO_DATE('10/10/2019','DD/MM/YYYY'));
+insert into Abonamente values
+(32,30,TO_DATE('24/05/2019','DD/MM/YYYY'), TO_DATE('23/09/2020','DD/MM/YYYY'));
+insert into Abonamente values
+(33,30,TO_DATE('12/05/2019','DD/MM/YYYY'), TO_DATE('10/09/2019','DD/MM/YYYY'));
+
+
+
+
+---------------------Vanzari------------------------------
+
+insert into Vanzari values (1,1,to_date('12/10/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (2,1,to_date('11/12/2021','dd/mm/yyyy'),13);
+insert into Vanzari values (3,1,to_date('10/11/2021','dd/mm/yyyy'),14);
+insert into Vanzari values (4,1,to_date('13/09/2021','dd/mm/yyyy'),15);
+insert into Vanzari values (5,2,to_date('12/09/2021','dd/mm/yyyy'),16);
+insert into Vanzari values (6,3,to_date('14/09/2021','dd/mm/yyyy'),17);
+insert into Vanzari values (7,4,to_date('16/08/2021','dd/mm/yyyy'),18);
+insert into Vanzari values (8,5,to_date('11/10/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (9,6,to_date('13/10/2021','dd/mm/yyyy'),13);
+insert into Vanzari values (10,1,to_date('12/12/2021','dd/mm/yyyy'),16);
+insert into Vanzari values (11,1,to_date('14/12/2021','dd/mm/yyyy'),17);
+insert into Vanzari values (12,1,to_date('12/08/2021','dd/mm/yyyy'),18);
+insert into Vanzari values (13,1,to_date('16/08/2021','dd/mm/yyyy'),11);
+insert into Vanzari values (14,1,to_date('17/08/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (15,1,to_date('18/12/2021','dd/mm/yyyy'),17);
+insert into Vanzari values (16,1,to_date('19/08/2021','dd/mm/yyyy'),19);
+insert into Vanzari values (17,1,to_date('11/07/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (18,1,to_date('20/12/2021','dd/mm/yyyy'),20);
+insert into Vanzari values (19,1,to_date('21/06/2021','dd/mm/yyyy'),11);
+insert into Vanzari values (20,1,to_date('24/06/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (21,1,to_date('24/06/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (22,1,to_date('01/05/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (23,1,to_date('02/04/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (24,1,to_date('04/03/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (25,1,to_date('05/02/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (26,1,to_date('06/01/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (27,1,to_date('07/01/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (28,1,to_date('08/11/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (29,1,to_date('09/10/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (30,1,to_date('13/10/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (31,1,to_date('18/12/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (32,1,to_date('15/12/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (33,1,to_date('15/12/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (34,1,to_date('17/12/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (35,1,to_date('13/12/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (36,1,to_date('10/10/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (37,1,to_date('10/10/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (38,1,to_date('18/11/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (39,1,to_date('18/11/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (40,1,to_date('15/11/2021','dd/mm/yyyy'),12);
+
+
+insert into Vanzari values (41,30,to_date('12/10/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (42,30,to_date('11/12/2021','dd/mm/yyyy'),13);
+insert into Vanzari values (43,30,to_date('10/11/2021','dd/mm/yyyy'),14);
+insert into Vanzari values (44,30,to_date('13/09/2021','dd/mm/yyyy'),15);
+insert into Vanzari values (45,30,to_date('12/09/2021','dd/mm/yyyy'),16);
+insert into Vanzari values (46,30,to_date('14/09/2021','dd/mm/yyyy'),17);
+insert into Vanzari values (47,30,to_date('16/08/2021','dd/mm/yyyy'),18);
+insert into Vanzari values (48,30,to_date('11/10/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (49,30,to_date('13/10/2021','dd/mm/yyyy'),13);
+insert into Vanzari values (50,30,to_date('12/12/2021','dd/mm/yyyy'),16);
+insert into Vanzari values (51,30,to_date('14/12/2021','dd/mm/yyyy'),17);
+insert into Vanzari values (52,30,to_date('12/08/2021','dd/mm/yyyy'),18);
+insert into Vanzari values (53,30,to_date('16/08/2021','dd/mm/yyyy'),11);
+insert into Vanzari values (54,30,to_date('17/08/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (55,30,to_date('18/12/2021','dd/mm/yyyy'),17);
+insert into Vanzari values (56,30,to_date('19/08/2021','dd/mm/yyyy'),19);
+insert into Vanzari values (57,30,to_date('11/07/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (58,30,to_date('20/12/2021','dd/mm/yyyy'),20);
+insert into Vanzari values (59,30,to_date('21/06/2021','dd/mm/yyyy'),11);
+insert into Vanzari values (60,30,to_date('24/06/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (61,30,to_date('24/06/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (62,30,to_date('01/05/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (63,30,to_date('02/04/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (64,30,to_date('04/03/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (65,30,to_date('05/02/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (66,30,to_date('06/01/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (67,30,to_date('07/01/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (68,30,to_date('08/11/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (69,30,to_date('09/10/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (70,30,to_date('13/10/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (71,30,to_date('18/12/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (72,30,to_date('15/12/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (73,30,to_date('15/12/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (74,30,to_date('17/12/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (75,30,to_date('13/12/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (76,30,to_date('10/10/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (77,30,to_date('10/10/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (78,30,to_date('18/11/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (79,30,to_date('18/11/2021','dd/mm/yyyy'),12);
+insert into Vanzari values (80,30,to_date('15/11/2021','dd/mm/yyyy'),12);
+
+
+
+-----------------------Clienti----------------------------------
+
+INSERT INTO Clienti  
+values (100, 'Nunu', 'Maria', 'Strada Zorilor, nr.16', '+40755689340', 'nunumaria@email.com',TO_DATE('12/08/1948','DD/MM/YYYY'), 10, '20');
+
+INSERT INTO Clienti  
+values (300, 'Nunu', 'Marina', 'Strada Zorilor, nr.16','+40785689340', 'nunumarina@email.com',TO_DATE('10/08/1980','DD/MM/YYYY'), 11,'21');
+INSERT INTO Clienti  
+values (301, 'Nunu', 'Marina', 'Strada Zorilor, nr.16','+40785689340', 'nunumarina@email.com',TO_DATE('10/08/1980','DD/MM/YYYY'), 12,'21');
+INSERT INTO Clienti  
+values (302, 'Nunu', 'Marina', 'Strada Zorilor, nr.16','+40785689340', 'nunumarina@email.com',TO_DATE('10/08/1980','DD/MM/YYYY'), 13,'21');
+INSERT INTO Clienti  
+values (303, 'Nunu', 'Marina', 'Strada Zorilor, nr.16','+40785689340', 'nunumarina@email.com',TO_DATE('10/08/1980','DD/MM/YYYY'), 14,'21');
+INSERT INTO Clienti  
+values (304, 'Nunu', 'Marina', 'Strada Zorilor, nr.16','+40785689340', 'nunumarina@email.com',TO_DATE('10/08/1980','DD/MM/YYYY'), 15,'21');
+INSERT INTO Clienti  
+values (304, 'Nunu', 'Marina', 'Strada Zorilor, nr.16','+40785689340', 'nunumarina@email.com',TO_DATE('10/08/1980','DD/MM/YYYY'), 16,'21');
+
+INSERT INTO Clienti  
+values (102, 'Nunu', 'Mariana', 'Strada Zorilor, nr.16', '+40745689340', 'nenemariana@gmail.com',TO_DATE('22/08/1948','DD/MM/YYYY'), 12,22);
+INSERT INTO Clienti 
+values (103, 'Nana', 'Elena', 'Strada Zorilor, nr.66', '+40745689340', 'nanaelena@email.com',TO_DATE('15/10/1988','DD/MM/YYYY'), 13,23);
+
+INSERT INTO Clienti 
+values (200, 'Nana', 'Elena', 'Strada Zorilor, nr.66', '+40745689340', 'nanaelena@email.com',TO_DATE('15/10/1988','DD/MM/YYYY'), 10,23);
+
+INSERT INTO Clienti  
+values (104, 'Marinescu','Ana', 'Strada Bradului, nr.16', '+40755680987', 'marinescuana@email.com',TO_DATE('19/08/1988','DD/MM/YYYY'), 14,24);
+INSERT INTO Clienti  
+values (105, 'Costache', 'Alexandra', 'Strada Pinului, nr.16', '+40755689340', 'costachealexandra@email.com',TO_DATE('12/08/1998','DD/MM/YYYY'), 15,25);
+INSERT INTO Clienti  
+values (106, 'Ioan', 'Maria', 'Strada Molidului, nr.10', '+40755789340', 'ioanmaria@email.com',TO_DATE('12/08/1948','DD/MM/YYYY'), 16,26);
+INSERT INTO Clienti 
+values (107, 'Lala', 'Marcica', 'Strada Sperantei, nr.06', '+40755689340', 'lalamaricica@email.com',TO_DATE('23/01/1970','DD/MM/YYYY'), 17,27);
+INSERT INTO Clienti  
+values (108, 'Helu', 'Marian', 'Strada Sperantei, nr.16', '+40785689305', 'lulumarian@email.com',TO_DATE('14/10/1968','DD/MM/YYYY'), 18,28);
+INSERT INTO Clienti  
+values (109, 'Ioan', 'Ioana', 'Strada Papadiei, nr.40', '+40765680340', 'ioanioana@email.com',TO_DATE('22/07/1998','DD/MM/YYYY'), 19,29);
+INSERT INTO Clienti  
+values (110, 'Georgescu', 'Robert', 'Strada Molidului, nr.65', '+40775689340', 'georgescurobert@email.com',TO_DATE('16/10/1999','DD/MM/YYYY'),20,30 );
+INSERT INTO Clienti  
+values (111, 'Alexandria', 'Miruna', 'Strada Pinului, nr.16', '+40745689370', 'alexandriamiruna@email.com',TO_DATE('10/01/1999','DD/MM/YYYY'), 21,31);
+INSERT INTO Clienti  
+values (112, 'Alexandria', 'Raluca', 'Strada Pinului, nr.36', '+40795689890', 'alexandriaraluca@email.com',TO_DATE('28/08/1998','DD/MM/YYYY'), 22,32);
+INSERT INTO Clienti  
+values (113, 'Laila', 'Maria', 'Strada Sperantei, nr.08', '+40765689380', '@email.com',TO_DATE('12/08/1948','DD/MM/YYYY'), 23,33);
+
+INSERT INTO Clienti  
+values (114, 'Nunu', 'Maria', 'Strada Zorilor, nr.16', '+40755689340', 'nunumaria@email.com',TO_DATE('12/08/1948','DD/MM/YYYY'), 10,34);
+INSERT INTO Clienti  
+values (115, 'Nunu', 'Marina', 'Strada Zorilor, nr.16','+40785689340', 'nunumarina@email.com',TO_DATE('10/08/1980','DD/MM/YYYY'), 11,35);
+INSERT INTO Clienti  
+values (116, 'Nunu', 'Mariana', 'Strada Zorilor, nr.16', '+40745689340', 'nenemariana@gmail.com',TO_DATE('22/08/1948','DD/MM/YYYY'), 12,36);
+INSERT INTO Clienti 
+values (117, 'Nana', 'Elena', 'Strada Zorilor, nr.66', '+40745689340', 'nanaelena@email.com',TO_DATE('15/10/1988','DD/MM/YYYY'), 13,37);
+INSERT INTO Clienti  
+values (118, 'Marinescu','Ana', 'Strada Bradului, nr.16', '+40755680987', 'marinescuana@email.com',TO_DATE('19/08/1988','DD/MM/YYYY'), 14,38);
+INSERT INTO Clienti  
+values (119, 'Costache', 'Alexandra', 'Strada Pinului, nr.16', '+40755689340', 'costachealexandra@email.com',TO_DATE('12/08/1998','DD/MM/YYYY'), 15,39);
+INSERT INTO Clienti  
+values (120, 'Ioan', 'Maria', 'Strada Molidului, nr.10', '+40755789340', 'ioanmaria@email.com',TO_DATE('12/08/1948','DD/MM/YYYY'), 16,40);
+
+
+--------------Facturi-------------------------------
+
+ 
+ insert into Facturi  values
+(400,1, TO_DATE('19/05/2019','DD/MM/YYYY'), 123 , 'Plata abonamentului lunar', 100 );
+insert into Facturi  values
+(401,2, TO_DATE('19/05/2019','DD/MM/YYYY'), 124 , 'Plata abonamentului lunar', 101 );
+insert into Facturi  values
+(402,3, TO_DATE('19/05/2019','DD/MM/YYYY'), 125 , 'Plata abonamentului lunar', 102 );
+insert into Facturi  values
+(403,4, TO_DATE('19/05/2019','DD/MM/YYYY'), 126 , 'Plata abonamentului lunar', 103 );
+insert into Facturi  values
+(404,5, TO_DATE('19/05/2019','DD/MM/YYYY'), 127 , 'Plata abonamentului lunar', 104 );
+insert into Facturi  values
+(405,6, TO_DATE('19/05/2019','DD/MM/YYYY'), 128 , 'Plata abonamentului lunar', 105 );
+insert into Facturi  values
+(406,7, TO_DATE('19/05/2019','DD/MM/YYYY'), 129 , 'Plata abonamentului saptamanal', 106 );
+insert into Facturi  values
+(407,8, TO_DATE('19/05/2019','DD/MM/YYYY'), 130 , 'Plata abonamentului saptamanal', 107 );
+insert into Facturi  values
+(408,9, TO_DATE('19/05/2019','DD/MM/YYYY'), 131 , 'Plata abonamentului saptamanal', 108 );
+insert into Facturi  values
+(409, 10,TO_DATE('19/05/2019','DD/MM/YYYY'), 132 , 'Plata abonamentului saptamanal', 109 );
+insert into Facturi  values
+(410, 11,TO_DATE('19/05/2019','DD/MM/YYYY'), 133 , 'Plata abonamentului saptamanal', 110 );
+insert into Facturi  values
+(411, 12,TO_DATE('19/05/2019','DD/MM/YYYY'), 134 , 'Plata abonamentului saptamanal', 111 );
+insert into Facturi  values
+(412,13, TO_DATE('29/03/2019','DD/MM/YYYY'), 135 , 'Plata abonamentului saptamanal', 112 );
+insert into Facturi  values
+(413,14, TO_DATE('29/03/2019','DD/MM/YYYY'), 136 , 'Plata abonamentului saptamanal', 113 );
+insert into Facturi  values
+(414, 15,TO_DATE('19/05/2019','DD/MM/YYYY'), 137 , 'Plata abonamentului saptamanal', 114 );
+insert into Facturi  values
+(415, 16,TO_DATE('10/08/2020','DD/MM/YYYY'), 138, 'Plata abonamentului VIP', 115 );
+insert into Facturi  values
+(416, 17,TO_DATE('16/05/2017','DD/MM/YYYY'), 139, 'Plata abonamentului VIP', 116 );
+insert into Facturi  values
+(417, 18,TO_DATE('10/05/2017','DD/MM/YYYY'), 140, 'Plata abonamentului VIP', 117 );
+insert into Facturi  values
+(418, 19,TO_DATE('10/05/2017','DD/MM/YYYY'), 141, 'Plata abonamentului VIP', 118 );
+insert into Facturi  values
+(419, 20,TO_DATE('16/05/2017','DD/MM/YYYY'), 142, 'Plata abonamentului VIP', 119 );
+insert into Facturi  values
+(420, 21,TO_DATE('16/05/2016','DD/MM/YYYY'), 143, 'Plata abonamentului anual', 120 );
+insert into Facturi  values
+(421, 22,TO_DATE('16/05/2016','DD/MM/YYYY'), 144, 'Plata abonamentului anual', 101 );
+insert into Facturi  values
+(422, 23,TO_DATE('16/05/2017','DD/MM/YYYY'), 145, 'Plata abonamentului DELUXE', 102 );
+insert into Facturi  values
+(423, 25,TO_DATE('09/03/2017','DD/MM/YYYY'), 146, 'Plata abonamentului DELUXE', 103 );
+insert into Facturi  values
+(424, 27,TO_DATE('09/04/2017','DD/MM/YYYY'), 147, 'Plata abonamentului DELUXE', 104 );
+insert into Facturi  values
+(425, 28,TO_DATE('26/05/2019','DD/MM/YYYY'), 148, 'Plata abonamentului VIP', 105 );
+/
+update Antrenori set status =Null;
+/
+
+
+
+-----REZOLVARE-----
+--FUNCTII
+--1. Sa se afiseze cantitatile vandute din fiecare produs
+
+create or replace function get_vanzari_produse(produs_v in number)
+return number
+is vanzari_p number;
+begin
+select sum(Cantitate) into vanzari_p
+from Vanzari
+where IdProdus=produs_v;
+return vanzari_p;
+end;
+/
+
+
+select distinct IdProdus, get_vanzari_produse(IdProdus) from Vanzari;
+
+--2. Cati clienti are fiecare antrenor
+/
+create or replace function get_nr_clienti(cl_antrenor in number)
+return number
+is nr_cl number;
+begin
+select count(IdAntrenor) into nr_cl
+from Clienti
+where IdAntrenor=cl_antrenor;
+return nr_cl;
+end;
+ 
+
+select distinct IdAntrenor, get_nr_clienti(IdAntrenor)from Clienti order by IdAntrenor;
+-----METODE------
+--1. Sa se scada pretul cu 10 um pentru produsele cu cele mai mici vanzari
+/
+--verificam cantitatile vandute
+select * from Vanzari
+order by Cantitate;
+/
+
+select * from produse
+where IdProdus=1
+/
+
+create or replace procedure scadere_pret is
+variab_produs varchar2(100);
+begin
+select IdProdus into variab_produs
+from Vanzari
+where Cantitate is not null
+order by Cantitate 
+   fetch first row only;
+
+update Produse
+set PretUnitar = PretUnitar - 2
+where IdProdus = variab_produs;
+end;
+/
+begin scadere_pret;
+end;
+/
+
+
+
+--2. LOOP and IF
+--Schimba numele antrenorilor care au >1 clienti in ' Super antrenor'
+create or replace function nr_cl(id1 in varchar2) 
+return number IS 
+antrenor_cl number(2) := 0 ;
+begin
+select count(IdAntrenor) into antrenor_cl
+from Clienti 
+where IdAntrenor = id1;
+return antrenor_cl;
+end;
+/
+
+
+--Test Functie
+select IdAntrenor, nr_cl(IdAntrenor)from Clienti order by IdAntrenor;
+/
+
+
+--select * from Antrenori;
+
+create or replace procedure super_antrenor 
+as
+a1 number(10) :=0;
+begin
+for c in(select IdAntrenor, status from Antrenori) 
+loop
+a1 := nr_cl(c.IdAntrenor);
+if a1 >1 then
+update Antrenori set status = 'Super Antrenor'
+where IdAntrenor = c.IdAntrenor;
+--dbms_output.put_line(a1 || ' >> Super Antrenor');
+else 
+update Antrenori set status = 'weak'
+where IdAntrenor = c.IdAntrenor;
+end if;
+end loop;
+end;
+/
+begin super_antrenor;
+end;
+/
+select * from Antrenori;
+
+
+
+--3. Triggers
+--generare valoare unica
+--Inserarea unei Sali noi in baza de date
+/
+insert into Sali(IdSala, DenumireSala, NrMaxClienti)
+ values('21','Sala zumba21',20);
+select max(IdSala) from Sali; 
+
+create sequence seq_Id_SalaF start with 24 increment by 1;
+select seq_Id_SalaF.nextval from dual; 
+/
+create or replace trigger genereaza_IdSalaF
+before insert on Sali for each row
+begin
+  :new.IdSala := seq_Id_SalaF.nextval;
+end;
+/
+insert into Sali(DenumireSala, NrMaxClienti)
+values('SalaNouaDeFitness',50);
+/
+
+select * from Sali where DenumireSala='SalaNouaDeFitness';
+/
+
+---2. verificare inainte de operatie
+
+create or replace trigger verifica_numeSala
+before update on Sali for each row
+begin
+  if :new.DenumireSala  >= '40'
+  then
+    RAISE_APPLICATION_ERROR(-20000, 'Numele introdus depaseste 30 de caractere.');
+  end if;
+end;
+update Sali set DenumireSala  = 'Cea mai ggg' where IdSala = 10;
+/
+
+
+---------
+
+ --3. stergere referentiala
+
+
+select * from Antrenori where IdAntrenor='21';
+/
+select * from Clienti where IdAntrenor='21';
+/
+
+
+create or replace trigger sterge_Client
+after delete on  Antrenori  for each row
+--DECLARE
+  -- PRAGMA AUTONOMOUS_TRANSACTION;
+begin 
+delete Clienti where IdAntrenor = :old.IdAntrenor;
+
+end;
+/
+delete Antrenori where IdAntrenor='23';
+/
+select * from Antrenori where IdAntrenor=23;
+/
+select * from Clienti where IdAntrenor=23;
+/
+
+
+ commit;
+ 
+
